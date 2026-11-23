@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark"><meta name="description" content="FinScope — controle financeiro pessoal.">
+  <title>{% block title %}Visão geral{% endblock %} · FinScope</title>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/OpenSans-Regular.ttf') }}" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/transactions.js') }}" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Pular para o conteúdo</a>
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <a class="brand" href="{{ url_for('analytics.dashboard') }}">
+      <svg class="brand-symbol" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M6 25V15m10 10V7m10 18V11" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
+      <span>FinScope</span>
+    </a>
+    <p class="brand-subtitle">Controle financeiro pessoal</p>
+  </div>
+  {% set icons = {
+    'analytics.dashboard': 'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',
+    'transactions.index': 'M4 7h15m-4-4 4 4-4 4 M20 17H5m4-4-4 4 4 4',
+    'analytics.insights': 'M4 20h16 M7 16v-5 M12 16V5 M17 16V9',
+    'analytics.simulator': 'M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z M8 7h8 M8 11h1 M15 11h1 M8 15h1 M15 15h1 M8 18h1 M15 18h1'
+  } %}
+  <nav class="sidebar-navigation" aria-label="Navegação principal">
+    <p class="navigation-heading">Finanças</p>
+    {% for endpoint, label in [('analytics.dashboard', 'Visão geral'), ('transactions.index', 'Transações'), ('analytics.insights', 'Análise de gastos'), ('analytics.simulator', 'Simulador')] %}
+    {% set active = request.endpoint == endpoint or (endpoint == 'transactions.index' and request.endpoint == 'transactions.edit') %}
+    <a href="{{ url_for(endpoint) }}" class="nav-item {{ 'active' if active else '' }}" {% if active %}aria-current="page"{% endif %}>
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ icons[endpoint] }}"/></svg>
+      <span class="nav-text">{{ label }}</span>
+    </a>
+    {% endfor %}
+  </nav>
+  <div class="sidebar-bottom">
+    <span class="sidebar-monogram" aria-hidden="true">F</span>
+    <div><strong>Meu controle financeiro</strong><span>Uso pessoal</span></div>
+  </div>
+</aside>
+<div class="workspace">
+  <header class="topbar"><span>FinScope <span class="separator">/</span> <strong>{% block breadcrumb %}Visão geral{% endblock %}</strong></span></header>
+  <main id="main">
+    {% for category, message in get_flashed_messages(with_categories=true) %}<div class="alert {{ category }}" role="status">{{ message }}</div>{% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer>FinScope<span>Valores em reais · Datas no horário de São Paulo</span></footer>
+</div>
+{% block scripts %}{% endblock %}
+</body>
+</html>

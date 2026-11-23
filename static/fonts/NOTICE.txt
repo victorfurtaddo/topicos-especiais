@@ -1,0 +1,5 @@
+Open Sans
+Copyright 2010-2011 Google Corporation.
+Designed by Steve Matteson.
+These Open Sans 1.10 font files are distributed under the Apache License, Version 2.0.
+See LICENSE-Apache-2.0.txt.

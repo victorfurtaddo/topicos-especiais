@@ -1,0 +1,13 @@
+{
+  "description": "Supermercado",
+  "amount": "185.90",
+  "type": "expense",
+  "category": "Alimentação",
+  "date": "2026-11-18",
+  "payment_method": "credit_card",
+  "is_recurring": false,
+  "installments": 1,
+  "tags": ["mercado", "essencial"],
+  "merchant": {"name": "Supermercado Central", "city": "Itapetininga"},
+  "notes": "Compra semanal"
+}

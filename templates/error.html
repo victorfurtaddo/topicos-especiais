@@ -1,0 +1,2 @@
+{% extends 'base.html' %}{% block title %}Não foi possível continuar{% endblock %}
+{% block content %}<section class="panel error-panel"><p class="eyebrow">ERRO {{ status }}</p><h1>Não foi possível abrir a página.</h1><p role="alert">{{ message }}</p><div class="form-actions"><a class="button secondary" href="{{ url_for('transactions.index') }}">Ver transações</a><a class="button primary" href="{{ url_for('analytics.dashboard') }}">Voltar à visão geral</a></div></section>{% endblock %}

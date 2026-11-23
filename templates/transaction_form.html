@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Editar' if document else 'Nova' }} transação{% endblock %}{% block breadcrumb %}Transações{% endblock %}
+{% block content %}
+{% set d = document or {} %}
+{% set v = values if values is not none else {'description': d.get('description',''), 'amount': (d.amount|decimal) if d else '', 'type': d.get('type','expense'), 'category': d.get('category','Alimentação'), 'date': (d.date|date_input) if d else today, 'payment_method': d.get('payment_method','pix'), 'installments': d.get('installments',1), 'is_recurring': 'on' if d.get('is_recurring') else '', 'merchant_name': d.get('merchant',{}).get('name',''), 'merchant_city': d.get('merchant',{}).get('city',''), 'tags': d.get('tags',[])|join(', '), 'notes': d.get('notes','')} %}
+<div class="page-heading"><div><h1>{{ 'Editar' if document else 'Nova' }} transação</h1><p>Informe os dados do lançamento.</p></div><a class="text-link" href="{{ url_for('transactions.index') }}">Voltar às transações</a></div>
+{% if error %}<div class="alert error" role="alert">{{ error }}</div>{% endif %}
+<form class="panel transaction-form" method="post">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<h2>Informações principais</h2><div class="form-grid">
+<label class="span-2">Descrição *<input name="description" value="{{ v.get('description','') }}" maxlength="160" required placeholder="Ex.: Supermercado"></label>
+<label>Valor (R$) *<input name="amount" type="number" step="0.01" min="0.01" max="999999999.99" value="{{ v.get('amount','') }}" required placeholder="0,00"></label>
+<label>Tipo *<select name="type"><option value="expense" {{ 'selected' if v.get('type') == 'expense' else '' }}>Despesa</option><option value="income" {{ 'selected' if v.get('type') == 'income' else '' }}>Receita</option></select></label>
+<label>Categoria *<select name="category">{% for category in categories %}<option {{ 'selected' if v.get('category') == category else '' }}>{{ category }}</option>{% endfor %}</select></label>
+<label>Data *<input name="date" type="date" value="{{ v.get('date','') }}" required min="1900-01-01" max="2100-12-31"></label>
+<label>Pagamento<select name="payment_method">{% for key, label in payments.items() %}<option value="{{ key }}" {{ 'selected' if v.get('payment_method') == key else '' }}>{{ label }}</option>{% endfor %}</select></label>
+<label>Parcelas<input name="installments" type="number" min="1" max="60" value="{{ v.get('installments',1) }}" required><small>Informativo: o valor registrado entra integralmente na data escolhida.</small></label>
+</div><div class="form-divider"></div><h2>Detalhes adicionais</h2><div class="form-grid">
+<label>Estabelecimento<input name="merchant_name" value="{{ v.get('merchant_name','') }}" maxlength="100" placeholder="Nome do estabelecimento"></label><label>Cidade<input name="merchant_city" value="{{ v.get('merchant_city','') }}" maxlength="80" placeholder="Ex.: Itapetininga"></label>
+<label class="span-2">Tags<input name="tags" value="{{ v.get('tags','') }}" placeholder="Ex.: essencial, mercado"><small>Separe por vírgulas. Até 10 tags, com 30 caracteres cada.</small></label>
+<label class="span-2">Observações<textarea name="notes" rows="3" maxlength="1000" placeholder="Observações sobre o lançamento">{{ v.get('notes','') }}</textarea></label>
+<label class="checkbox-label span-2"><input type="checkbox" name="is_recurring" {{ 'checked' if v.get('is_recurring') == 'on' else '' }}> Esta é uma transação recorrente</label>
+</div><p class="muted">* Campos obrigatórios. Recorrência é uma anotação; novos lançamentos não são criados automaticamente.</p><div class="form-actions"><a class="button secondary" href="{{ url_for('transactions.index') }}">Cancelar</a><button type="submit" class="button primary">{{ 'Salvar alterações' if document else 'Cadastrar transação' }}</button></div>
+</form>
+{% endblock %}
