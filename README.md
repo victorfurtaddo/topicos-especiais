@@ -18,42 +18,60 @@ O Flask recebe requisições e valida os dados; o PyMongo persiste e agrega, e o
 
 ## Execução local
 
-### Interface Next.js
+### Iniciar o sistema completo (Linux)
 
-Visão geral, transações, análise de gastos e simulador estão disponíveis em
-Next.js e shadcn/ui. Inicie o MongoDB e o Flask conforme
-as instruções abaixo e, em outro terminal, execute:
+Depois de instalar o MongoDB, o ambiente Python e as dependências abaixo,
+instale o frontend uma vez com **Node.js 20.9 ou superior** e npm:
 
 ```bash
 cd frontend
 npm ci
-npm run dev
+cd ..
 ```
 
-Abra http://127.0.0.1:3000. O Next encaminha `/api/*` ao Flask em
-`http://127.0.0.1:5000`; para alterar esse endereço no servidor Next, defina
-`FLASK_URL` antes de iniciá-lo. Para validar o frontend, execute `npm run lint`
-e `npm run build` dentro de `frontend`.
-
-### Atalho no computador deste projeto
-
-No Linux, dentro de `finscope`, execute `./iniciar.sh`. Esse comando usa o
-ambiente virtual do projeto, inicia o MongoDB se necessário e abre o Flask.
-Mantenha o terminal aberto enquanto usa a aplicação. Para parar o Flask, use
-Ctrl+C. Depois de reiniciar o computador, execute o mesmo comando novamente.
-
-O MongoDB local está em `.local-mongodb/`, com dados persistentes em `.local-mongo/`.
-Depois de reiniciar o computador, dentro de `finscope`, execute:
+Dentro da pasta do projeto, execute:
 
 ```bash
+./iniciar.sh
+```
+
+Se o arquivo não tiver permissão de execução após extrair o ZIP, use
+`bash iniciar.sh`.
+
+Abra **http://127.0.0.1:3000** para usar a nova interface. O comando inicia o
+MongoDB local, o Flask na porta 5000 e o Next.js na porta 3000. O frontend
+encaminha as chamadas `/api/*` para o Flask, incluindo os cookies da sessão.
+Não é necessário ativar o ambiente virtual antes de executar o script.
+
+Mantenha o terminal aberto. Ctrl+C encerra o Flask e o Next iniciados pelo
+script; o MongoDB continua ativo. Se já houver um Flask disponível na porta
+5000, o script o reutiliza e não o encerra ao sair. Se a porta 3000 estiver
+ocupada, encerre a interface anterior antes de executar novamente.
+
+Neste computador, o binário MongoDB está em `.local-mongodb/` e os dados em
+`.local-mongo/`. Essas pastas não fazem parte da entrega: em outro computador,
+instale o MongoDB Community Server com `mongod` disponível no PATH ou inicie
+uma instância local antes de rodar o script.
+
+### Execução em terminais separados
+
+```bash
+# Terminal 1, na raiz do projeto
 source .venv/bin/activate
 python scripts/start_mongo.py
 python app.py
 ```
 
-O script verifica se o banco já está ativo antes de iniciá-lo. Essas duas pastas
-são locais e não devem ser enviadas ao GitHub. Em outro computador, instale o
-MongoDB conforme abaixo; o script também aceita `mongod` instalado no PATH.
+```bash
+# Terminal 2, na raiz do projeto
+cd frontend
+npm run dev -- --hostname 127.0.0.1
+```
+
+A interface antiga Jinja2 permanece acessível em http://127.0.0.1:5000.
+Na execução manual do frontend, `FLASK_URL` permite definir outro endereço
+para o backend. O comando `iniciar.sh` usa o backend local da porta 5000.
+Para validar o frontend, execute `npm run lint` e `npm run build` em `frontend`.
 
 ### 1. MongoDB
 
