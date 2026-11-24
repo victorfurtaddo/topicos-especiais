@@ -12,11 +12,28 @@ Aplicação local de inteligência financeira pessoal para a disciplina **Tópic
 
 ## Tecnologias e decisões
 
-Python 3.11+, Flask, PyMongo, MongoDB 5.0+, Jinja2, python-dotenv, HTML, CSS e JavaScript. Chart.js 4.5.1 incluído localmente, sob licença MIT.
+Python 3.11+, Flask, PyMongo, MongoDB 5.0+, Next.js, React, Tailwind CSS e shadcn/ui. A interface anterior em Jinja permanece disponível no Flask.
 
-Monólito pequeno: rotas recebem requisições, funções validam e analisam, PyMongo persiste/agrega e Jinja2 apresenta. Sem autenticação, múltiplos usuários, Docker, ORM ou serviços externos. CSS próprio foi escolhido no lugar de Tailwind para eliminar uma etapa de build e manter execução offline. Chart.js é a única biblioteca JavaScript.
+O Flask recebe requisições e valida os dados; o PyMongo persiste e agrega, e o Next.js apresenta as telas usando a API Flask. Sem autenticação, múltiplos usuários, Docker, ORM ou serviços externos.
 
 ## Execução local
+
+### Interface Next.js
+
+Visão geral, transações, análise de gastos e simulador estão disponíveis em
+Next.js e shadcn/ui. Inicie o MongoDB e o Flask conforme
+as instruções abaixo e, em outro terminal, execute:
+
+```bash
+cd frontend
+npm ci
+npm run dev
+```
+
+Abra http://127.0.0.1:3000. O Next encaminha `/api/*` ao Flask em
+`http://127.0.0.1:5000`; para alterar esse endereço no servidor Next, defina
+`FLASK_URL` antes de iniciá-lo. Para validar o frontend, execute `npm run lint`
+e `npm run build` dentro de `frontend`.
 
 ### Atalho no computador deste projeto
 
